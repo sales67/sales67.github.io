@@ -1,109 +1,92 @@
-/*
- * Alumno/a: 
- * Fecha:
- 
- 
- RETO 4: INTERACCIÓN
- ^^^^^^^^^^^^^^^^^^^
- 
- 4.14 MOBILE MOVE
- ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
- Cuando interactuamos con el móvil añadiremos esta línea al HTML (las características para escalar el contenido son personalizables):
-
- <head>
-	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
- </head>
-
- En nuestro caso también vamos a añadir un CSS para que el contenido no tenga márgenes, con el siguiente código:
-
- html, body {
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
- }
-
- Modifica el siguiente código para dibujar un quad de forma y color aleatorio cada vez que muevas el móvil.
-
- COMENTARIO: Para poder testear que funciona correctamente, tendrás que subir el archivo a internet (mediante FTP) 
- y una vez subido abrir el index.html en el navegador con la dirección web correspondiente.
-
-
- */
-
-/*
-var v1x = 38;
-var v1y = 30;
-var v2x = 80;
-var v2y = 20;
-var v3x = 70;
-var v3y = 60;
-var v4x = 30;
-var v4y = 70;
-
-
+let figures;
+let colors;
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(300, 400);
+  this.colors = [[0,0,0,255],[0,0,255,255],[255,255,0,255],[255,0,0,255]];
+  
+  this.figures = [];
+  
+  inicialitzarFigures();
 }
 
 function draw() {
-  background(255);
-  quad(v1x, v1y, v2x, v2y, v3x, v3y, v4x, v4y);
+  background(220);
+  var rand = int(random(10));
+  //console.log(rand);
+  if (rand == 1){
+    let i = int(random(100))
+    if (i <= 12){
+     this.figures[i].accionar();
+    }
+  }  
+  this.figures.forEach(pintarFigures);
 }
 
-// The device moved!
-function deviceMoved() {
-
-}
-*/
-
-
-
-
-
-//SOLUCIÓN
-
-
-
-var v1x = 38;
-var v1y = 30;
-var v2x = 80;
-var v2y = 20;
-var v3x = 70;
-var v3y = 60;
-var v4x = 30;
-var v4y = 70;
-var r = 70;
-var g = 70;
-var b = 70;
-
-
-function setup() {
-  createCanvas(windowWidth, windowHeight);
+function pintarFigures(figura,index){  
+  if (figura.accionat()){
+    figura = animacioEsvair(figura);    
+  }
+  figura.draw();
 }
 
-function draw() {
-  background(255);
-  noStroke();
-  fill(r,g,b)
-  quad(v1x, v1y, v2x, v2y, v3x, v3y, v4x, v4y);
+function animacioEsvair(figura){
+    var color = figura.getColor();
+    var difuminat = color[3];
+    print("accionat");
+    if (figura.esvaint()){      
+      if (difuminat <= 0){
+        figura.noEsvair();
+        figura.desAccionar();
+       }else{
+         print("esvaint");
+        difuminat-=1;
+      }          
+    }else{      
+      if (difuminat >= 255){
+        figura.esvair();
+        figura.desAccionar();
+      }else{
+        print("desesvaint");
+        difuminat+=1; 
+      }
+    }
+    figura.setColor([color[0],color[1],color[2],difuminat]);
+    return figura;
 }
 
-// The device moved!
-function deviceShaken() {
-  v1x = random(windowWidth);
-  v1y = random(windowHeight);
-  v2x = random(windowWidth);
-  v2y = random(windowHeight);
-  v3x = random(windowWidth);
-  v3y = random(windowHeight);
-  v4x = random(windowWidth);
-  v4y = random(windowHeight);
-
-  r = random(255);
-  g = random(255);
-  b = random(255);
+function inicialitzarFigures(){
+  //this.figures = new Figura(type,initPos,height,width);
+  //0 negre
+  //1 blau
+  //2 groc
+  //3 vermell
+  
+  // SQUARES
+  this.figures.push(new Figura("rect",[80,90],30,30,this.colors[0]));
+  this.figures.push(new Figura("rect",[100,60],10,20,this.colors[1]));
+  this.figures.push(new Figura("rect",[80,60],20,30,this.colors[2]));
+  this.figures.push(new Figura("rect",[80,120],20,20,this.colors[3]));
+  
+  this.figures.push(new Figura("rect",[60,90],20,30,this.colors[1]));
+  this.figures.push(new Figura("rect",[110,70],20,20,this.colors[2]));
+  this.figures.push(new Figura("rect",[80,140],20,20,this.colors[1]));
+  this.figures.push(new Figura("rect",[100,120],10,20,this.colors[1]));
+  this.figures.push(new Figura("rect",[100,140],10,20,this.colors[2]));
+  this.figures.push(new Figura("rect",[100,190],10,20,this.colors[2]));
+  
+  this.figures.push(new Figura("rect",[110,140],20,30,this.colors[3]));
+  this.figures.push(new Figura("rect",[130,120],20,20,this.colors[0]));
+  this.figures.push(new Figura("rect",[130,110],20,10,this.colors[1]));
+  this.figures.push(new Figura("rect",[80,120],20,20,this.colors[3]));
+  
+  //TRIANGLES
+  
+  this.figures.push(new Figura("tri",[80,60,100,40,100,60],0,0,this.colors[2]));
+  this.figures.push(new Figura("tri",[60,90,80,90,80,70],0,0,this.colors[3]));
+  this.figures.push(new Figura("tri",[60,120,60,140,80,120],0,0,this.colors[1]));
+  this.figures.push(new Figura("tri",[110,140,130,140,130,120],0,0,this.colors[2]));
+  this.figures.push(new Figura("tri",[150,140,130,140,130,160],0,0,this.colors[2]));
+  this.figures.push(new Figura("tri",[110,170,110,190,130,170],0,0,this.colors[3]));
+  //this.figures.push(new Figura("tri",[100,190,100,200,80,200],0,0,this.colors[1]));
+ 
 }
-
-
-
-
