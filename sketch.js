@@ -1,18 +1,16 @@
-let figures;
-let colors;
+var figures;
+var colors = [[0,0,0,255],[0,0,255,255],[255,255,0,255],[255,0,0,255]];
+var speed = 5;
 function setup() {
-  createCanvas(300, 400);
-  this.colors = [[0,0,0,255],[0,0,255,255],[255,255,0,255],[255,0,0,255]];
-  
-  this.figures = [];
-  
+  createCanvas(210, 290);
   inicialitzarFigures();
 }
 
+
+
 function draw() {
   background(220);
-  var rand = int(random(10));
-  //console.log(rand);
+  var rand = int(random(this.speed));
   if (rand == 1){
     let i = int(random(100))
     if (i <= 12){
@@ -20,6 +18,34 @@ function draw() {
     }
   }  
   this.figures.forEach(pintarFigures);
+  pintarLletres();
+}
+
+function pintarLletres(){
+  fill(0);
+  textSize(5);
+text('Lorem ipsum dolor sit amet, \n\n consectetur adipiscing elit.\n Mauris accumsan nulla sit \n amet facilisis laoreet.\n Morbi id lacus faucibus,\n euismod justo vitae,\n aliquam ante. Ut quis neque \n vitae diam finibus \n dapibus nec a massa.', 130, 200);
+}
+
+function deviceShaken(){
+  this.colors.forEach(canviColors);
+}
+
+function canviColors(color){
+  color[0] = random (255);
+  color[1] = random (255);
+  color[2] = random (255);
+}
+
+
+
+function mousePressed(){
+  inicialitzarFigures();
+}
+
+function mouseReleased() {
+  print("released");
+  this.speed = 10;
 }
 
 function pintarFigures(figura,index){  
@@ -32,13 +58,13 @@ function pintarFigures(figura,index){
 function animacioEsvair(figura){
     var color = figura.getColor();
     var difuminat = color[3];
-    print("accionat");
     if (figura.esvaint()){      
       if (difuminat <= 0){
         figura.noEsvair();
         figura.desAccionar();
+        figura.setColor(this.colors[int(random(4))]);
+        color = figura.getColor();
        }else{
-         print("esvaint");
         difuminat-=1;
       }          
     }else{      
@@ -46,7 +72,6 @@ function animacioEsvair(figura){
         figura.esvair();
         figura.desAccionar();
       }else{
-        print("desesvaint");
         difuminat+=1; 
       }
     }
@@ -55,6 +80,7 @@ function animacioEsvair(figura){
 }
 
 function inicialitzarFigures(){
+  this.figures = [];
   //this.figures = new Figura(type,initPos,height,width);
   //0 negre
   //1 blau
@@ -78,6 +104,7 @@ function inicialitzarFigures(){
   this.figures.push(new Figura("rect",[130,120],20,20,this.colors[0]));
   this.figures.push(new Figura("rect",[130,110],20,10,this.colors[1]));
   this.figures.push(new Figura("rect",[80,120],20,20,this.colors[3]));
+  this.figures.push(new Figura("rect",[60,190],20,30,this.colors[2]));
   
   //TRIANGLES
   
@@ -87,6 +114,8 @@ function inicialitzarFigures(){
   this.figures.push(new Figura("tri",[110,140,130,140,130,120],0,0,this.colors[2]));
   this.figures.push(new Figura("tri",[150,140,130,140,130,160],0,0,this.colors[2]));
   this.figures.push(new Figura("tri",[110,170,110,190,130,170],0,0,this.colors[3]));
-  //this.figures.push(new Figura("tri",[100,190,100,200,80,200],0,0,this.colors[1]));
+  this.figures.push(new Figura("tri",[100,190,80,190,80,210],0,0,this.colors[1]));
+  this.figures.push(new Figura("tri",[80,190,80,170,60,190],0,0,this.colors[0]));
+  this.figures.push(new Figura("tri",[60,220,80,220,60,240],0,0,this.colors[2]));
  
 }
